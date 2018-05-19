@@ -9,6 +9,7 @@ Monitors network connectivity for downtime.
 - [Usage](#usage)
 	- [Net Test](#net-test)
 	- [Filter](#filter)
+	- [Analyse](#analyse)
 
 # Overview
 Set of scripts for analysing network connectivity.  
