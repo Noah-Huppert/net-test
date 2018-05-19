@@ -42,4 +42,6 @@ To save the output for later analysis: `net-test.sh > test.log`
 ## Analyse
 Usage: `analyse.sh < test.log`  
 
-Or directly pipe in the net test output: `net-test.sh | analyse.sh`
+To directly pipe in the net test output: `net-test.sh | analyse.sh`  
+
+Or to analyse log file output in real time: `tail -f test.log | analyse.sh`
