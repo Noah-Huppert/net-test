@@ -28,7 +28,7 @@ The results of these tests will be recorded in the following format:
                  fails the tool will try to connect to the next well known 
 		 website, a connectivity check will only fail if all websites 
 		 can not be contacted. Index starts at 0.
-- Latency: Time in milliseconds
+- Latency: Time in milliseconds, -1 if test failed
 
 The output of this command can then be passed into the `analyse.sh` command to 
 display only failed ping tests.
