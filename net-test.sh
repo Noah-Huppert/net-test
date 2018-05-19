@@ -19,6 +19,11 @@
 test_sites=("1.1.1.1" "8.8.8.8" "google.com" "wikipedia.com")
 test_interval=1
 
+# Print site names
+for site in "${test_sites[@]}"; do
+	echo "#$site"
+done
+
 # Check
 while true; do
 	current_time="$(date +%s)"

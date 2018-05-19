@@ -3,20 +3,32 @@ Monitors network connectivity for downtime.
 
 # Table Of Contents
 - [Overview](#overview)
+- [Output](#output)
+	- [Sites](#sites)
+	- [Test Results](#test-results)
 - [Usage](#usage)
+	- [Net Test](#net-test)
+	- [Filter](#filter)
 
 # Overview
 Set of scripts for analysing network connectivity.  
 
 The `net-test.sh` tool will check network connectivity every second by 
-pinging the following well known websites: 
+pinging well known websites.  
 
-- 1.1.1.1
-- 8.8.8.8
-- google.com
-- wikipedia.com
+If the tool fails to connect to one well known website it will try to connect 
+to the next well known website. A network connectivity test will only fail if 
+all websites can not be contacted.
 
-The results of these tests will be recorded in the following format:
+# Output
+## Sites
+The sites which the tool checks connectivity by connecting to will be printed 
+out in order of precedence when `net-test.sh` is started.
+
+Each site will be on a new line, which will start with a `#`.
+
+## Test Results
+The results of connectivity tests will be recorded in the following format:
 
 ```
 <Unix Time> <Connected?> <Website Index> <Latency>
@@ -24,24 +36,39 @@ The results of these tests will be recorded in the following format:
 
 - Unix Time: Time test was started, seconds since epoch
 - Connected?: 1 if connected to internet, 0 if not
-- Website Index: Which website was pinged, if the first connectivity check 
-                 fails the tool will try to connect to the next well known 
-		 website, a connectivity check will only fail if all websites 
-		 can not be contacted. Index starts at 0.
+- Website Index: Which website was successfully connected to. Index starts at 0
 - Latency: Time in milliseconds, -1 if test failed
 
-The output of this command can then be passed into the `analyse.sh` command to 
-display only failed ping tests.
+The output of this command can then be passed into the `filter.sh` command to 
+display separate out tests which pass from tests which fail.  
+
+Output can also be passed to `analyse.sh` to see statistics about the test.
 
 # Usage
 ## Net Test
+Runs network connectivity tests every second.  
+
 Usage: `net-test.sh`  
 
 To save the output for later analysis: `net-test.sh > test.log`
 
+## Filter
+Filters network connectivity output to only show specific types of test output.  
+
+Usage: `filter.sh < test.log`  
+
+Arguments:
+- `--status` (String): Filter tests which pass or fail. Accepted values: 
+                      `pass`, `fail`
+
+To directly pipe in the net test output: `net-test.sh | filter.sh`  
+
+Or to filter log file output in real time: `tail -f test.log | filter.sh`
+
 ## Analyse
+Display statistics about test output.  
+
 Usage: `analyse.sh < test.log`  
 
-To directly pipe in the net test output: `net-test.sh | analyse.sh`  
-
-Or to analyse log file output in real time: `tail -f test.log | analyse.sh`
+The number of successful and failed tests along average latency will be printed 
+out.
