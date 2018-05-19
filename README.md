@@ -50,7 +50,20 @@ Runs network connectivity tests every second.
 
 Usage: `net-test.sh`  
 
-To save the output for later analysis: `net-test.sh > test.log`
+To save the output for later analysis: `net-test.sh > test.log`.  
+
+Example output:
+
+```
+1526769729 1 0 7.395
+1526769730 1 0 10.374
+1526769731 1 0 10.385
+1526769732 1 0 5.797
+1526769733 1 0 7.082
+1526769734 1 0 8.669
+1526769735 1 0 20.135
+1526769736 1 0 20.029
+```
 
 ## Filter
 Filters network connectivity output to only show specific types of test output.  
@@ -71,4 +84,11 @@ Display statistics about test output.
 Usage: `analyse.sh < test.log`  
 
 The number of successful and failed tests along average latency will be printed 
-out.
+out.  
+
+Example output:
+
+```
+Total: 49807, Failed: 0% (0), Succeeded: 100% (49807)
+Running time: 14:36:56, Avrg latency: 10.448 ms
+```
