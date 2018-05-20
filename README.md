@@ -26,7 +26,10 @@ all websites can not be contacted.
 The sites which the tool checks connectivity by connecting to will be printed 
 out in order of precedence when `net-test.sh` is started.
 
-Each site will be on a new line, which will start with a `#`.
+Each site will appear on a new line, which will start with a `#`.  
+
+This behavior can be disabled by passing the `--no-header` argument to 
+`net-test.sh`.
 
 ## Test Results
 The results of connectivity tests will be recorded in the following format:
@@ -51,11 +54,21 @@ Runs network connectivity tests every second.
 
 Usage: `net-test.sh`  
 
-To save the output for later analysis: `net-test.sh > test.log`.  
+Arguments:
+
+- `--no-header`: Don't print the list of sites the script contacts when the 
+	        script begins. This can be used if one wishes to continue 
+		appending statements to an existing log file.
+
+To save the output for later analysis: `net-test.sh >> test.log`.  
 
 Example output:
 
 ```
+#1.1.1.1
+#8.8.8.8
+#google.com
+#wikipedia.com
 1526769729 1 0 7.395
 1526769730 1 0 10.374
 1526769731 1 0 10.385

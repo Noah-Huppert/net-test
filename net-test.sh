@@ -13,16 +13,38 @@
 # Where <Internet Connectivity> is a 0 or a 1. And <Fallback Number> is the 
 # index of the site in test_sites which the internet connectivity status was 
 # determined with.
+#
+# Arguments
+#	--no-header: Makes script not print sites header
 #?
 
 # List of sites to test internet connectivity with
 test_sites=("1.1.1.1" "8.8.8.8" "google.com" "wikipedia.com")
 test_interval=1
 
-# Print site names
-for site in "${test_sites[@]}"; do
-	echo "#$site"
+# Arguments
+op_no_header="false"
+while [ ! -z "$1" ]; do
+	key="$1"
+	shift
+
+	case "$key" in
+		--no-header)
+			op_no_header="true"
+			;;
+		*)
+			echo "Error: unknown argument \"$key\"" >&2
+			exit 1
+			;;
+	esac
 done
+
+# Print site names
+if [ "$op_no_header" != "true" ]; then
+	for site in "${test_sites[@]}"; do
+		echo "#$site"
+	done
+fi
 
 # Check
 while true; do

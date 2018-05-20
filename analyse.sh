@@ -76,7 +76,7 @@ while read line; do
 	elif [ "$t_status" == "0" ]; then
 		failed=$(("$failed" + 1))
 	else
-		echo "Error: unknown status \"$t_status\"" >&2
+		echo "Error: unknown status \"$t_status\", line: $line" >&2
 		exit 1
 	fi
 
