@@ -6,18 +6,12 @@
 # Usage: analyse.sh
 #
 # Expects stdin to be network test output.
+#
+# Arguments:
+#	--show-status: Displays status messages to indicate to the user that it 
+#		       is still processing. Will print a separating "-----" 
+#		       before showing analysis results
 #?
-
-# Counters
-start_time=""
-last_time=""
-
-failed=0
-succeeded=0
-
-latency_total="0"
-
-num_tests=0
 
 # Source: https://stackoverflow.com/a/12199798/1478191
 secs_to_duration() {
@@ -45,6 +39,36 @@ function print_summary() { # ()
 	echo "Total: $num_tests, Failed: ${fail_percent}% ($failed), Succeeded: ${success_percent}% ($succeeded)"
 	echo "Running time: $duration, Avrg latency: $avrg_latency ms"
 }
+
+# Arguments
+op_show_status="false"
+
+while [ ! -z "$1" ]; do
+	key="$1"
+	shift
+
+	case "$key" in
+		--show-status)
+			op_show_status="true"
+			;;
+		*)
+			echo "Error: unknown argument \"$key\"" >&2
+			exit 1
+			;;
+	esac
+done
+
+# Counters
+start_time=""
+last_time=""
+
+failed=0
+succeeded=0
+
+latency_total="0"
+
+num_tests=0
+since_last_status_print=0
 
 # For each line
 while read line; do
@@ -86,6 +110,18 @@ while read line; do
 	fi
 
 	num_tests=$(("$num_tests" + 1))
+	since_last_status_print=$(("$since_last_status_print" + 1))
+
+	# Print status
+	if [ "$op_show_status" == "true" ] && (( "$since_last_status_print" > 200 )); then
+		echo "Processed $num_tests tests"
+		since_last_status_print=0
+	fi
 done
+
+if [ "$op_show_status" == "true" ]; then
+	echo "Processed $num_tests tests"
+	echo "-----"
+fi
 
 print_summary

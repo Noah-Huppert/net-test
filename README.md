@@ -99,6 +99,11 @@ Display statistics about test output.
 
 Usage: `analyse.sh < test.log`  
 
+Arguments:
+- `--show-status`: Show an indication that the script is processing test output, 
+		   as anywhere over half a day of output can take over a minute 
+		   to process.
+
 The number of successful and failed tests along average latency will be printed 
 out.  
 
