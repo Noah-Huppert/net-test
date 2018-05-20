@@ -40,45 +40,24 @@ function print_summary() { # ()
 	echo "Running time: $duration, Avrg latency: $avrg_latency ms"
 }
 
-# Arguments
-op_show_status="false"
+function show_status() {
+	if [ "$num_lines" != 0 ]; then
+		percent=$(echo "scale=2; ($num_tests / $num_lines) * 100" | bc)
+	else
+		percent=0
+	fi
 
-while [ ! -z "$1" ]; do
-	key="$1"
-	shift
+	echo "Processed $num_tests tests (${percent}%)"
+}
 
-	case "$key" in
-		--show-status)
-			op_show_status="true"
-			;;
-		*)
-			echo "Error: unknown argument \"$key\"" >&2
-			exit 1
-			;;
-	esac
-done
-
-# Counters
-start_time=""
-last_time=""
-
-failed=0
-succeeded=0
-
-latency_total="0"
-
-num_tests=0
-since_last_status_print=0
-
-# For each line
-while read line; do
+function extract_stats() { # ()
 	# Extract information
 	if [ -z "$line" ]; then
 		echo "Error: empty line" >&2
 		exit 1
 	elif [[ "$line" =~ "#" ]]; then
 		# Skip commented lines
-		continue
+		return
 	fi
 
 	parts=($line)
@@ -110,18 +89,66 @@ while read line; do
 	fi
 
 	num_tests=$(("$num_tests" + 1))
-	since_last_status_print=$(("$since_last_status_print" + 1))
+}
 
-	# Print status
-	if [ "$op_show_status" == "true" ] && (( "$since_last_status_print" > 200 )); then
-		echo "Processed $num_tests tests"
-		since_last_status_print=0
-	fi
+# Arguments
+op_show_status="false"
+
+while [ ! -z "$1" ]; do
+	key="$1"
+	shift
+
+	case "$key" in
+		--show-status)
+			op_show_status="true"
+			;;
+		*)
+			echo "Error: unknown argument \"$key\"" >&2
+			exit 1
+			;;
+	esac
 done
 
+# Counters
+start_time=""
+last_time=""
+
+failed=0
+succeeded=0
+
+latency_total="0"
+
+num_tests=0
+since_last_status_print=0
+
+# Get total lines so show status can print a percent
+all=$(cat -)
+
 if [ "$op_show_status" == "true" ]; then
-	echo "Processed $num_tests tests"
-	echo "-----"
+	num_lines=$(echo "$all" | wc -l)
+	show_interval=$(echo "$num_lines / 10" | bc)
+
+	# For each line
+	while read line; do
+		extract_stats
+
+		since_last_status_print=$(("$since_last_status_print" + 1))
+
+		# Print status
+		if (( "$since_last_status_print" > "$show_interval" )); then
+			show_status
+			since_last_status_print=0
+		fi
+	done <<< "$all"
+
+	if [ "$op_show_status" == "true" ]; then
+		echo "-----"
+	fi
+else
+	# For each line
+	while read line; do
+		extract_stats
+	done <<< "$all"
 fi
 
 print_summary
