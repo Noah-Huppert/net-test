@@ -87,6 +87,8 @@ Usage: `filter.sh < test.log`
 Arguments:
 - `--status` (String): Filter tests which pass or fail. Accepted values: 
                       `pass`, `fail`
+- `--sites`: Displays sites header from test output, must be only argument 
+	   provided to filter.
 
 To directly pipe in the net test output: `net-test.sh | filter.sh`  
 
