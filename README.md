@@ -46,7 +46,7 @@ The results of connectivity tests will be recorded in the following format:
 The output of this command can then be passed into the `filter.sh` command to 
 display separate out tests which pass from tests which fail.  
 
-Output can also be passed to `analyse.sh` to see statistics about the test.
+Output can also be passed to `analyse` to see statistics about the test.
 
 # Usage
 ## Net Test
@@ -97,12 +97,19 @@ Or to filter log file output in real time: `tail -f test.log | filter.sh`
 ## Analyse
 Display statistics about test output.  
 
-Usage: `analyse.sh < test.log`  
+The analyse tool is written in C to achieve higher performance. A version was 
+written in Bash, but it took upwards of 2 minutes to complete what the C version 
+could do in seconds.  
 
-Arguments:
-- `--show-status`: Show an indication that the script is processing test output, 
-		   as anywhere over half a day of output can take over a minute 
-		   to process.
+To build the analyse tool navigate to the `analyse` directory and run `make`. This 
+will compile the analyse tool and output a binary named `analyse`.
+
+Usage: `analyse < test.log`  
+
+Analyse expects test logs to be provided via stdin. 
+
+If there is more than 2 minute gap between tests the script assumes net-test was 
+paused. And will disregard this gap when counting the total running time.
 
 The number of successful and failed tests along average latency will be printed 
 out.  
@@ -110,6 +117,6 @@ out.
 Example output:
 
 ```
-Total: 49807, Failed: 0% (0), Succeeded: 100% (49807)
-Running time: 14:36:56, Avrg latency: 10.448 ms
+Total: 86800, Failed: 99.990% (86791), Succeeded: 0.010% (9)
+Ruuning time: 25:25:39, Avrg latency: 10.391 ms
 ```

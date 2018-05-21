@@ -1,2 +1,5 @@
 # Logs
 *.log
+
+# Analyse binary
+analyse/analyse
