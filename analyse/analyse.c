@@ -45,12 +45,20 @@ int main() {
 				testT = inttok;
 			} else if (i == 1) {  // If test result
 				// If successfull test
-				if (strcmp(subtok, "1")) {
+				char *endptr;
+				int inttok = strtol(subtok, &endptr, 10);
+
+				if (endptr == subtok) { // Check parse error
+					printf("Error parsing test status: %s, errno: %d\n", subtok, inttok);
+					return 1;
+				}
+
+				if (inttok == 1) {
 					succeeded++;
-			 	} else if (strcmp(subtok, "0")) {
+			 	} else if (inttok == 0) {
 					failed++;
 				} else {
-					printf("Error unknown test result value %s\n", subtok);
+					printf("Error unknown test result value %d\n", inttok);
 					return 1;
 				}
 			} else if (i == 3) { // If latency
@@ -89,7 +97,8 @@ int main() {
 
 	// -- -- Calculate average latency
 	float avrgLatency = latencyTotal / (float)numTests;
-
+	
+	// -- -- Output
 	printf("Total: %d, Failed: %.3f% (%d), Succeeded: %.3f% (%d)\n", numTests, failedPercent, failed, succeededPercent, succeeded);
 	printf("Ruuning time: %d:%d:%d, Avrg latency: %.3f ms\n", hours, minutes, seconds, avrgLatency);
 
