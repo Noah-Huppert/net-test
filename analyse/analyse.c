@@ -4,7 +4,6 @@
 
 int main() {	
 	// Counters
-	int startT = -1;
 	int lastT = -1;
 	int deltaT = 0;
 
@@ -40,11 +39,6 @@ int main() {
 				if (endptr == subtok) { // Check parse error
 					printf("Error parsing test time: %s, errno: %d\n", subtok, inttok);
 					return 1;
-				}
-
-				// Set startT if not set
-				if (startT == -1) {
-					startT = inttok;
 				}
 
 				// Set lastT
@@ -89,8 +83,6 @@ int main() {
 	}
 
 	// -- -- Calculate duration
-	//int deltaT = lastT - startT;
-
 	int hours = deltaT / 3600;
 	int minutes = (deltaT % 3600) / 60;
 	int seconds = deltaT % 60;
