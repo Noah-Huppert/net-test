@@ -85,6 +85,7 @@ Filters network connectivity output to only show specific types of test output.
 Usage: `filter.sh < test.log`  
 
 Arguments:
+- `--help|-h|-?` (String): Display usage.
 - `--status` (String): Filter tests which pass or fail. Accepted values: 
                       `pass`, `fail`
 - `--sites`: Displays sites header from test output, must be only argument 
@@ -93,6 +94,8 @@ Arguments:
 To directly pipe in the net test output: `net-test.sh | filter.sh`  
 
 Or to filter log file output in real time: `tail -f test.log | filter.sh`
+
+To filter an existing log file: `filter.sh < test.log`
 
 ## Analyse
 Display statistics about test output.  

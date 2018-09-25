@@ -19,11 +19,20 @@
 default_op_status=".*"
 op_status="$default_op_status"
 op_sites="false"
+
+usage () {
+	echo "usage: ${0##*/} [--sites | --status <pass,fail>]"
+	exit
+}
+
 while [ ! -z "$1" ]; do
 	key="$1"
 	shift
 
 	case "$key" in
+		--help|-h|-?)
+                        usage
+                        ;;
 		--status)
 			if [ "$1" == "pass" ]; then
 				op_status=1
@@ -39,6 +48,12 @@ while [ ! -z "$1" ]; do
 			op_sites="true"
 			;;
 		*)
+			if [ -f $key ]
+			then
+				echo "Error: This program only reads from stdin"
+				echo "To filter an existing file run \"filter.sh < test.log\""
+				exit 1
+			fi
 			echo "Error: unknown argument \"$key\"" >&2
 			exit 1
 			;;
