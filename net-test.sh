@@ -16,12 +16,12 @@
 # Options
 #
 #	--no-header: Makes script not print sites header
-#       --sites SITES: List of space seperated sites which will be used when
-#                      testing connectivity. Make sure to place list in quotes
+#       --site SITE: Site used testing connectivity
 #?
 
 # List of sites to test internet connectivity with
-test_sites=("1.1.1.1" "8.8.8.8" "google.com" "wikipedia.com")
+default_test_sites=("1.1.1.1" "8.8.8.8" "google.com" "wikipedia.com")
+test_sites=()
 test_interval=1
 
 # Arguments
@@ -34,12 +34,12 @@ while [ ! -z "$1" ]; do
 	--no-header)
 	    op_no_header="true"
 	    ;;
-	--sites)
+	--site)
 	    if [ -z "$1" ]; then
-		echo "Error: --sites option requires a value" >&2
+		echo "Error: --site option requires a value" >&2
 		exit 1
 	    fi
-	    test_sites=("$1")
+	    test_sites+=("$1")
 	    shift
 	    ;;
 	*)
@@ -48,6 +48,10 @@ while [ ! -z "$1" ]; do
 	    ;;
     esac
 done
+
+if [ -z "$test_sites" ]; then
+    test_sites=(${default_test_sites[@]})
+fi
 
 # Print site names
 if [ "$op_no_header" != "true" ]; then
