@@ -12,7 +12,7 @@ Monitors network connectivity for downtime.
 # Overview
 The `net-test` program performs measurements and publishes the resulting metrics for Prometheus to scrape.
 
-Prometheus and Grafana Docker containers a provided set and ready to analyse and view `net-test` data.
+Prometheus and Grafana Docker containers provided set and ready to analyse and view `net-test` data.
 
 ![Grafana dashboard showing histogram of round trip time](./screenshot.png)
 
