@@ -25,6 +25,7 @@ If one would like to run the setup without Docker Compose see [Run Manually](#ru
 The command line options of the `net-test` program describe its capabilities:
 
 ```
+Usage of net-test:
   -T string
         Add this target host to the beginning of existing target hosts
   -a    Measure all target hosts (incompatible with -f)
