@@ -4,7 +4,6 @@ Monitors network connectivity for downtime.
 # Table Of Contents
 - [Overview](#overview)
 - [Run](#run)
-  - [Command Line Arguments](#command-line-argumentS)
   - [Run with Docker Compose](#run-with-docker-compose)
   - [Run Manually](#run-manually)
 - [Analyse](#analyse)
@@ -17,9 +16,15 @@ The `net-test` program performs measurements and publishes the resulting metrics
 Prometheus can then be used to analyse and view data.
 
 # Run
-## Command Line Arguments
+The `net-test` tool measures results and publishes them for Prometheus to scrape. One cannot meaningfully view the resulting measurements without Prometheus.
+
+A Docker Compose setup is provided to make this process as easy as running a single tool, see [Run with Docker Compose](#run-with-docker-compose).
+
+If one would like to run the setup without Docker Compose see [Run Manually](#run-manually).
+
+The command line options of the `net-test` program describe its capabilities:
+
 ```
-Usage of net-test:
   -T string
         Add this target host to the beginning of existing target hosts
   -a    Measure all target hosts (incompatible with -f)
