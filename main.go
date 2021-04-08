@@ -59,7 +59,7 @@ func main() {
 	targetHosts := NewStrArrFlag([]string{})
 	flag.Var(&targetHosts,
 		"t",
-		"Target hosts (DNS or IP4) to measure for connectivity (can be provided multiple times)")
+		"Target hosts (DNS or IP4) to measure (can be provided multiple times)")
 
 	var primaryTargetHost string
 	flag.StringVar(&primaryTargetHost,

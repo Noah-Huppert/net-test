@@ -30,7 +30,7 @@ The tool is configured with a list of target hosts, a host picking strategy, and
 
 Target host options:
 
-- `-t string`: Target hosts (DNS or IP4) to measure for connectivity (can be provided multiple times)
+- `-t string`: Target hosts (DNS or IP4) to measure (can be provided multiple times)
 - `-T string`: Add this target host to the beginning of existing target hosts
 
 Host picking strategy:
