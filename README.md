@@ -55,6 +55,12 @@ To customize the command line arguments used to run `net-test` in Docker create 
 docker-compose -f docker-compose.yml -f docker-compose.custom.yml up -d
 ```
 
+This is a lot to type every time, so the helper script `custom-docker-compose` is provided to make life easier. The following is equivalent to the command above:
+
+```
+./custom-docker-compose up -d
+```
+
 ## Run Manually
 The `net-test` tool is written in Go. Run it:
 
