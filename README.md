@@ -3,13 +3,10 @@ Monitors network connectivity for downtime.
 
 # Table Of Contents
 - [Overview](#overview)
-- [Output](#output)
-	- [Sites](#sites)
-	- [Test Results](#test-results)
-- [Usage](#usage)
-	- [Net Test](#net-test)
-	- [Filter](#filter)
-	- [Analyse](#analyse)
+- [Run](#run)
+  - [Docker Compose](#docker-compose)
+  - [Manual](#manual)
+- [Analyse](#analyse)
 
 # Overview
 Tool which measures network connectivity to target hosts.
