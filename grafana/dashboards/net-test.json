@@ -32,6 +32,7 @@
       },
       "dataFormat": "tsbuckets",
       "datasource": null,
+      "description": "Histogram of ICMP Ping round trip time.",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -63,7 +64,7 @@
           "refId": "A"
         }
       ],
-      "title": "Histogram",
+      "title": "Round Trip Time Histogram",
       "tooltip": {
         "show": true,
         "showHistogram": false
@@ -326,5 +327,5 @@
   "timezone": "",
   "title": "Net Test",
   "uid": "WM-nr_lMk",
-  "version": 5
+  "version": 6
 }
