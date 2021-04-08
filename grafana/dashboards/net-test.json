@@ -272,7 +272,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Recent Percentiles",
+      "title": "Recent Round Trip Time Percentiles",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -327,5 +327,5 @@
   "timezone": "",
   "title": "Net Test",
   "uid": "WM-nr_lMk",
-  "version": 6
+  "version": 7
 }
