@@ -1,0 +1,4 @@
+version: "3.9"
+services:
+  net_test:
+    command: net-test # Customize invocation

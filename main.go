@@ -94,7 +94,7 @@ func main() {
 	flag.IntVar(&pingMs,
 		"p",
 		10000,
-		fmt.Sprintf("Interval in milliseconds at which to perform the ping measurement. Will perform %d ping(s). A value of -1 disables this test.", PING_COUNT))
+		fmt.Sprintf("Interval in milliseconds at which to perform the ping measurement. Will perform %d ping(s). A value of -1 disables this test. Results recorded to the \"ping_rtt_ms\" and \"ping_failures_total\" metrics with the \"target_host\" label.", PING_COUNT))
 
 	flag.Parse()
 

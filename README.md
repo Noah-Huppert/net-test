@@ -12,111 +12,44 @@ Monitors network connectivity for downtime.
 	- [Analyse](#analyse)
 
 # Overview
-Set of scripts for analysing network connectivity.  
+Tool which measures network connectivity to target hosts.
 
-The `net-test.sh` tool will check network connectivity every second by 
-pinging well known websites.  
+The `net-test` program performs measurements and publishes the resulting metrics for Prometheus to scrape.
 
-If the tool fails to connect to one well known website it will try to connect 
-to the next well known website. A network connectivity test will only fail if 
-all websites can not be contacted.
+Prometheus can then be used to analyse and view data.
 
-# Output
-## Sites
-The sites which the tool checks connectivity by connecting to will be printed 
-out in order of precedence when `net-test.sh` is started.
+# Run
+## Docker Compose
+A Docker Compose file is provided which orchestrates the execution of this tool.
 
-Each site will appear on a new line, which will start with a `#`.  
-
-This behavior can be disabled by passing the `--no-header` argument to 
-`net-test.sh`.
-
-## Test Results
-The results of connectivity tests will be recorded in the following format:
+Run:
 
 ```
-<Unix Time> <Connected?> <Website Index> <Latency>
+docker-compose up -d
 ```
 
-- Unix Time: Time test was started, seconds since epoch
-- Connected?: 1 if connected to internet, 0 if not
-- Website Index: Which website was successfully connected to. Index starts at 0
-- Latency: Time in milliseconds, -1 if test failed
+Then visit [127.0.0.1:9090](http://127.0.0.1:9090) to view the metrics.
 
-The output of this command can then be passed into the `filter.sh` command to 
-display separate out tests which pass from tests which fail.  
-
-Output can also be passed to `analyse` to see statistics about the test.
-
-# Usage
-## Net Test
-Runs network connectivity tests every second.  
-
-Usage: `net-test.sh`  
-
-Arguments:
-
-- `--no-header`: Don't print the list of sites the script contacts when the 
-	        script begins. This can be used if one wishes to continue 
-		appending statements to an existing log file.
-
-To save the output for later analysis: `net-test.sh >> test.log`.  
-
-Example output:
+To customize the command line arguments used to run `net-test` in Docker create a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Then edit this file with your custom command. To run with the custom command:
 
 ```
-#1.1.1.1
-#8.8.8.8
-#google.com
-#wikipedia.com
-1526769729 1 0 7.395
-1526769730 1 0 10.374
-1526769731 1 0 10.385
-1526769732 1 0 5.797
-1526769733 1 0 7.082
-1526769734 1 0 8.669
-1526769735 1 0 20.135
-1526769736 1 0 20.029
+docker-compose -f docker-compose.yml -f docker-compose.custom.yml up -d
 ```
 
-## Filter
-Filters network connectivity output to only show specific types of test output.  
-
-Usage: `filter.sh < test.log`  
-
-Arguments:
-- `--status` (String): Filter tests which pass or fail. Accepted values: 
-                      `pass`, `fail`
-- `--sites`: Displays sites header from test output, must be only argument 
-	   provided to filter.
-
-To directly pipe in the net test output: `net-test.sh | filter.sh`  
-
-Or to filter log file output in real time: `tail -f test.log | filter.sh`
-
-## Analyse
-Display statistics about test output.  
-
-The analyse tool is written in C to achieve higher performance. A version was 
-written in Bash, but it took upwards of 2 minutes to complete what the C version 
-could do in seconds.  
-
-To build the analyse tool navigate to the `analyse` directory and run `make`. This 
-will compile the analyse tool and output a binary named `analyse`.
-
-Usage: `analyse < test.log`  
-
-Analyse expects test logs to be provided via stdin. 
-
-If there is more than 2 minute gap between tests the script assumes net-test was 
-paused. And will disregard this gap when counting the total running time.
-
-The number of successful and failed tests along average latency will be printed 
-out.  
-
-Example output:
+## Manual
+The `net-test` tool is written in Go. Run it:
 
 ```
-Total: 86800, Failed: 99.990% (86791), Succeeded: 0.010% (9)
-Ruuning time: 25:25:39, Avrg latency: 10.391 ms
+go run main.go
 ```
+
+See the output of `go run main -h` for supported options.
+
+Next run Prometheus and have it scrape the host on which you set `net-test` to publish metrics. By default this is `127.0.0.1:2112`.
+
+# Analyse
+Measurements are placed in Prometheus. The following measurement types create the following metrics:
+
+**Ping (`-p <ms interval>`)**  
+- `ping_rtt_ms` (Histogram, labels `target_host`): Round trip time to target host
+- `ping_failures_total` (Count, labels `target_host`): Incremented when a target host cannot be reached
