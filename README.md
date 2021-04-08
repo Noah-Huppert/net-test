@@ -10,14 +10,14 @@ Monitors network connectivity for downtime.
 - [Analyse](#analyse)
 
 # Overview
-The `net-test` program performs measurements and publishes the resulting metrics for Prometheus to scrape.
+The Net Test program performs measurements and publishes the resulting metrics for Prometheus to scrape.
 
-Prometheus and Grafana Docker containers provided set and ready to analyse and view `net-test` data.
+Prometheus and Grafana Docker containers are provided setup and ready to analyse Net Test data.
 
 ![Grafana dashboard showing histogram of round trip time](./screenshot.png)
 
 # Run
-The `net-test` tool measures results and publishes them for Prometheus. Grafana is used to view the data.
+The Net Test tool measures results and publishes them for Prometheus. Grafana is used to view the data.
 
 A Docker Compose setup is provided to make this process as easy as running a single tool, see [Run with Docker Compose](#run-with-docker-compose).
 
@@ -70,7 +70,7 @@ This is a lot to type every time, so the helper script `custom-docker-compose` i
 ```
 
 ## Run Manually
-The `net-test` tool is written in Go. Run it:
+The Net Test tool is written in Go. Run it:
 
 ```
 go run main.go
@@ -78,7 +78,7 @@ go run main.go
 
 See [Command Line Options](#command-line-options) for details.
 
-Next run Prometheus and have it scrape the host on which you set `net-test` to publish metrics. By default this is `127.0.0.1:2112`.
+Next run Prometheus and have it scrape the host on which you set Net Test to publish metrics. By default this is `127.0.0.1:2112`.
 
 Finally run Grafana, use the configuration files provided in the `grafana/` directory.
 
