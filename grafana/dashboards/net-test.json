@@ -63,7 +63,7 @@
           "refId": "A"
         }
       ],
-      "title": "Histogram Better",
+      "title": "Histogram",
       "tooltip": {
         "show": true,
         "showHistogram": false
@@ -311,7 +311,7 @@
       }
     }
   ],
-  "refresh": false,
+  "refresh": "10s",
   "schemaVersion": 27,
   "style": "dark",
   "tags": [],
@@ -326,5 +326,5 @@
   "timezone": "",
   "title": "Net Test",
   "uid": "WM-nr_lMk",
-  "version": 3
+  "version": 5
 }

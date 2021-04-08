@@ -14,6 +14,8 @@ The `net-test` program performs measurements and publishes the resulting metrics
 
 Prometheus and Grafana Docker containers a provided set and ready to analyse and view `net-test` data.
 
+![Grafana dashboard showing histogram of round trip time](./screenshot.png)
+
 # Run
 The `net-test` tool measures results and publishes them for Prometheus. Grafana is used to view the data.
 
