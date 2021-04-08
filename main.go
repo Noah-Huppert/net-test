@@ -59,7 +59,7 @@ func main() {
 	targetHosts := NewStrArrFlag([]string{})
 	flag.Var(&targetHosts,
 		"t",
-		"Target hosts (DNS or IP4) to measure for connectivity")
+		"Target hosts (DNS or IP4) to measure for connectivity (can be provided multiple times)")
 
 	var primaryTargetHost string
 	flag.StringVar(&primaryTargetHost,
@@ -129,7 +129,13 @@ func main() {
 		pingRtt := prom.NewHistogramVec(
 			prom.HistogramOpts{
 				Name: "ping_rtt_ms",
-				Help: "Round trip time for a target host in milliseconds ",
+				Help: "Round trip time for a target host in milliseconds",
+				Buckets: []float64{
+					0, 20, 40, 60, 80, 100,
+					150, 200, 500,
+					1000, 1500, 2000, 3000, 5000,
+					10000, 30000, 60000, 120000,
+				},
 			},
 			[]string{"target_host"},
 		)
@@ -153,6 +159,7 @@ func main() {
 					check(fmt.Sprintf("failed to create pinger for \"%s\"", host), err)
 					pinger.Count = PING_COUNT
 					pinger.SetPrivileged(true)
+					pinger.Timeout = time.Duration(120) * time.Second // 2 minute timeout
 
 					pingers = append(pingers, pinger)
 				}

@@ -9,3 +9,6 @@ vendor/
 
 # Customization
 docker-compose.custom.yml
+
+# Container data
+container-data/

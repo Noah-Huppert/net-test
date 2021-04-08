@@ -5,14 +5,17 @@ services:
     ports:
       - "9090:9090"
     volumes:
+      - "./container-data/prometheus:/prometheus"
       - "./prometheus.yml:/etc/prometheus/prometheus.yml"
   grafana:
     image: grafana/grafana
     ports:
       - "3000:3000"
     volumes:
-      - "./grafana-prometheus.yaml:/usr/share/grafana/conf/provisioning/datasources/"
-      - "./grafana.ini:/usr/share/grafana/conf/defaults.ini"
+      - "./grafana/provisioning/datasources/:/etc/grafana/provisioning/datasources/"
+      - "./grafana/provisioning/dashboards/:/etc/grafana/provisioning/dashboards/"
+      - "./grafana/dashboards/:/var/lib/grafana/dashboards/"
+      - "./grafana/defaults.ini:/usr/share/grafana/conf/defaults.ini"
   net_test:
     build: .
     ports:
