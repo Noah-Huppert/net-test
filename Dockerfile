@@ -1,9 +1,12 @@
 FROM golang:latest
 
 WORKDIR /go/src/app
-COPY . .
 
+COPY go.mod go.sum ./
 RUN go get -d -v ./...
-RUN go install -v ./...
+
+COPY main.go ./
+RUN go build -o net-test main.go
+RUN mv ./net-test /bin/
 
 CMD ["net-test"]

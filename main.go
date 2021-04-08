@@ -145,18 +145,18 @@ func main() {
 		prom.MustRegister(pingFailures)
 
 		// Perform measurement
-		pingers := []*ping.Pinger{}
-		for _, host := range targetHosts.Get() {
-			pinger, err := ping.NewPinger(host)
-			check(fmt.Sprintf("failed to create pinger for \"%s\"", host), err)
-			pinger.Count = PING_COUNT
-			pinger.SetPrivileged(true)
-
-			pingers = append(pingers, pinger)
-		}
-
 		go func() {
 			for {
+				pingers := []*ping.Pinger{}
+				for _, host := range targetHosts.Get() {
+					pinger, err := ping.NewPinger(host)
+					check(fmt.Sprintf("failed to create pinger for \"%s\"", host), err)
+					pinger.Count = PING_COUNT
+					pinger.SetPrivileged(true)
+
+					pingers = append(pingers, pinger)
+				}
+
 				for _, pinger := range pingers {
 					err := pinger.Run()
 					if err != nil {
@@ -171,9 +171,12 @@ func main() {
 					// Record ping round trip time
 					stats := pinger.Statistics()
 
+					rtt := float64(stats.AvgRtt.Milliseconds())
+
 					pingRtt.With(prom.Labels{
 						"target_host": pinger.Addr(),
-					}).Observe(float64(stats.AvgRtt.Milliseconds()))
+					}).Observe(rtt)
+					log.Debugf("ping measured %f for \"%s\"", rtt, pinger.Addr())
 
 					// If in fallover mode
 					if methodFallover {
