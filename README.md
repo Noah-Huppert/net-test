@@ -3,120 +3,90 @@ Monitors network connectivity for downtime.
 
 # Table Of Contents
 - [Overview](#overview)
-- [Output](#output)
-	- [Sites](#sites)
-	- [Test Results](#test-results)
-- [Usage](#usage)
-	- [Net Test](#net-test)
-	- [Filter](#filter)
-	- [Analyse](#analyse)
+- [Run](#run)
+  - [Command Line Options](#command-line-options)
+  - [Run with Docker Compose](#run-with-docker-compose)
+  - [Run Manually](#run-manually)
+- [Analyse](#analyse)
 
 # Overview
-Set of scripts for analysing network connectivity.  
+The Net Test program performs measurements and publishes the resulting metrics for Prometheus to scrape.
 
-The `net-test.sh` tool will check network connectivity every second by 
-pinging well known websites.  
+Prometheus and Grafana Docker containers are provided setup and ready to analyse Net Test data.
 
-If the tool fails to connect to one well known website it will try to connect 
-to the next well known website. A network connectivity test will only fail if 
-all websites can not be contacted.
+![Grafana dashboard showing histogram of round trip time](./screenshot.png)
 
-# Output
-## Sites
-The sites which the tool checks connectivity by connecting to will be printed 
-out in order of precedence when `net-test.sh` is started.
+# Run
+The Net Test tool measures results and publishes them for Prometheus. Grafana is used to view the data.
 
-Each site will appear on a new line, which will start with a `#`.  
+A Docker Compose setup is provided to make this process as easy as running a single tool, see [Run with Docker Compose](#run-with-docker-compose).
 
-This behavior can be disabled by passing the `--no-header` argument to 
-`net-test.sh`.
+If one would like to run the setup without Docker Compose see [Run Manually](#run-manually).
 
-## Test Results
-The results of connectivity tests will be recorded in the following format:
+## Command Line Options
+The behavior of the `net-test` tool is specified using command line options. 
 
-```
-<Unix Time> <Connected?> <Website Index> <Latency>
-```
+The tool is configured with a list of target hosts, a host picking strategy, and a set of measurements to take.
 
-- Unix Time: Time test was started, seconds since epoch
-- Connected?: 1 if connected to internet, 0 if not
-- Website Index: Which website was successfully connected to. Index starts at 0
-- Latency: Time in milliseconds, -1 if test failed
+Target host options:
 
-The output of this command can then be passed into the `filter.sh` command to 
-display separate out tests which pass from tests which fail.  
+- `-t string`: Target hosts (DNS or IP4) to measure (can be provided multiple times)
+- `-T string`: Add this target host to the beginning of existing target hosts
 
-Output can also be passed to `analyse` to see statistics about the test.
+Host picking strategy:
 
-# Usage
-## Net Test
-Runs network connectivity tests every second.  
+- `-f`: Only measure the first target host and fallover to other following target hosts if the measurement fails (incompatible with -a) (default true)
+- `-a`: Measure all target hosts (incompatible with -f)
 
-Usage: `net-test.sh`  
+Measurement options:
 
-Arguments:
+- `-p int`: Interval in milliseconds at which to perform the ping measurement. Will perform 3 ping(s). A value of -1 disables this test. Results recorded to the "ping_rtt_ms" and "ping_failures_total" metrics with the "target_host" label. (default 10000)
 
-- `--no-header`: Don't print the list of sites the script contacts when the 
-	        script begins. This can be used if one wishes to continue 
-		appending statements to an existing log file.
+Other options:
 
-To save the output for later analysis: `net-test.sh >> test.log`.  
+- `-m string`: Host on which to serve Prometheus metrics (default ":2112")
 
-Example output:
+## Run with Docker Compose
+A Docker Compose file is provided which orchestrates the execution of this tool.
+
+Run:
 
 ```
-#1.1.1.1
-#8.8.8.8
-#google.com
-#wikipedia.com
-1526769729 1 0 7.395
-1526769730 1 0 10.374
-1526769731 1 0 10.385
-1526769732 1 0 5.797
-1526769733 1 0 7.082
-1526769734 1 0 8.669
-1526769735 1 0 20.135
-1526769736 1 0 20.029
+docker-compose up -d
 ```
 
-## Filter
-Filters network connectivity output to only show specific types of test output.  
+Then visit [127.0.0.1:3000](http://127.0.0.1:3000) to view the metrics. Select the `Net Test` dashboard.
 
-Usage: `filter.sh < test.log`  
-
-Arguments:
-- `--status` (String): Filter tests which pass or fail. Accepted values: 
-                      `pass`, `fail`
-- `--sites`: Displays sites header from test output, must be only argument 
-	   provided to filter.
-
-To directly pipe in the net test output: `net-test.sh | filter.sh`  
-
-Or to filter log file output in real time: `tail -f test.log | filter.sh`
-
-## Analyse
-Display statistics about test output.  
-
-The analyse tool is written in C to achieve higher performance. A version was 
-written in Bash, but it took upwards of 2 minutes to complete what the C version 
-could do in seconds.  
-
-To build the analyse tool navigate to the `analyse` directory and run `make`. This 
-will compile the analyse tool and output a binary named `analyse`.
-
-Usage: `analyse < test.log`  
-
-Analyse expects test logs to be provided via stdin. 
-
-If there is more than 2 minute gap between tests the script assumes net-test was 
-paused. And will disregard this gap when counting the total running time.
-
-The number of successful and failed tests along average latency will be printed 
-out.  
-
-Example output:
+To customize the command line arguments used to run `net-test` in Docker create a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Then edit this file with your custom command. To run with the custom command:
 
 ```
-Total: 86800, Failed: 99.990% (86791), Succeeded: 0.010% (9)
-Ruuning time: 25:25:39, Avrg latency: 10.391 ms
+docker-compose -f docker-compose.yml -f docker-compose.custom.yml up -d
 ```
+
+This is a lot to type every time, so the helper script `custom-docker-compose` is provided to make life easier. The following is equivalent to the command above:
+
+```
+./custom-docker-compose up -d
+```
+
+## Run Manually
+The Net Test tool is written in Go. Run it:
+
+```
+go run main.go
+```
+
+See [Command Line Options](#command-line-options) for details.
+
+Next run Prometheus and have it scrape the host on which you set Net Test to publish metrics. By default this is `127.0.0.1:2112`.
+
+Finally run Grafana, use the configuration files provided in the `grafana/` directory.
+
+# Analyse
+Measurements are placed in Prometheus. The following measurement types create the following metrics:
+
+**Ping (`-p <ms interval>`)**  
+- `ping_rtt_ms` (Histogram, labels `target_host`): Round trip time to target host
+- `ping_failures_total` (Count, labels `target_host`): Incremented when a target host cannot be reached
+
+Grafana is hosted at [127.0.0.1:3000](http://127.0.0.1:3000) by the provided Docker containers. A dashboard named "Net Test" has been pre-configured to show all available measurement data.
