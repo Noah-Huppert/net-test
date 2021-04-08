@@ -94,6 +94,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
+      "description": "Count of failed ICMP ping measurements.",
       "fieldConfig": {
         "defaults": {},
         "overrides": []
@@ -135,9 +136,9 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "ping_failures_total",
+          "expr": "rate(ping_failures_total[1m])",
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "{{target_host}}",
           "refId": "A"
         }
       ],
@@ -145,7 +146,7 @@
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
-      "title": "Failures",
+      "title": "Ping Failures",
       "tooltip": {
         "shared": true,
         "sort": 0,
@@ -211,6 +212,8 @@
         "alignAsTable": false,
         "avg": false,
         "current": false,
+        "hideEmpty": true,
+        "hideZero": true,
         "max": false,
         "min": false,
         "rightSide": false,
@@ -227,7 +230,7 @@
       "percentage": false,
       "pluginVersion": "7.5.3",
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
@@ -320,12 +323,12 @@
     "list": []
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Net Test",
   "uid": "WM-nr_lMk",
-  "version": 7
+  "version": 9
 }

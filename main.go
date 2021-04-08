@@ -13,8 +13,13 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-const PING_COUNT int = 3
+// PING_COUNT is the number of ping packets sent to determine the average round trip time.
+const PING_COUNT int = 1
 
+// PING_TIMEOUT_MS is the number of milliseconds before a ping attempt will timeout. 30 seconds.
+const PING_TIMEOUT_MS int = 30000
+
+// log is the application logger.
 var log golog.Logger = golog.NewLogger("net-test")
 
 // die will print an error then exit the process with code 1
@@ -133,8 +138,7 @@ func main() {
 				Buckets: []float64{
 					0, 20, 40, 60, 80, 100,
 					150, 200, 500,
-					1000, 1500, 2000, 3000, 5000,
-					10000, 30000, 60000, 120000,
+					1000, 1500, 2000, 3000,
 				},
 			},
 			[]string{"target_host"},
@@ -156,10 +160,15 @@ func main() {
 				pingers := []*ping.Pinger{}
 				for _, host := range targetHosts.Get() {
 					pinger, err := ping.NewPinger(host)
-					check(fmt.Sprintf("failed to create pinger for \"%s\"", host), err)
+					if err != nil {
+						log.Warnf("failed to create pinger for \"%s\": %s", host, err.Error())
+						pingFailures.With(prom.Labels{
+							"target_host": pinger.Addr(),
+						}).Inc()
+					}
 					pinger.Count = PING_COUNT
 					pinger.SetPrivileged(true)
-					pinger.Timeout = time.Duration(120) * time.Second // 2 minute timeout
+					pinger.Timeout = time.Duration(PING_TIMEOUT_MS) * time.Millisecond
 
 					pingers = append(pingers, pinger)
 				}
