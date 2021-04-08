@@ -2,5 +2,6 @@
 *.log
 *.out
 
-# Analyse binary
-analyse/analyse
+# Build output
+main
+vendor/
