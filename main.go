@@ -136,9 +136,10 @@ func main() {
 				Name: "ping_rtt_ms",
 				Help: "Round trip time for a target host in milliseconds",
 				Buckets: []float64{
-					0, 20, 40, 60, 80, 100,
-					150, 200, 500,
-					1000, 1500, 2000, 3000,
+					0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100,
+					200, 400, 600, 800, 1000,
+					5000, 10000,
+					20000, 30000,
 				},
 			},
 			[]string{"target_host"},

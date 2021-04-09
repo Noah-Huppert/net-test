@@ -15,7 +15,7 @@
   "description": "Measurements from the Net Test tool.",
   "editable": true,
   "gnetId": null,
-  "graphTooltip": 0,
+  "graphTooltip": 1,
   "links": [],
   "panels": [
     {
@@ -90,7 +90,7 @@
     },
     {
       "aliasColors": {},
-      "bars": false,
+      "bars": true,
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
@@ -118,7 +118,7 @@
         "total": false,
         "values": false
       },
-      "lines": true,
+      "lines": false,
       "linewidth": 1,
       "nullPointMode": "null",
       "options": {
@@ -191,7 +191,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": null,
-      "description": "Displays the 95th, 90th, 10th, and 1st percentiles.",
+      "description": "Displays the 99th, 95th, 90th, 10th, and 1st percentiles.",
       "fieldConfig": {
         "defaults": {
           "unit": "ms"
@@ -230,7 +230,7 @@
       "percentage": false,
       "pluginVersion": "7.5.3",
       "pointradius": 2,
-      "points": true,
+      "points": false,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
@@ -239,35 +239,45 @@
       "targets": [
         {
           "exemplar": true,
-          "expr": "histogram_quantile(0.95, ping_rtt_ms_bucket)",
+          "expr": "avg(histogram_quantile(0.99, ping_rtt_ms_bucket))",
+          "hide": false,
+          "interval": "",
+          "legendFormat": "99th",
+          "refId": "99th"
+        },
+        {
+          "exemplar": true,
+          "expr": "avg(histogram_quantile(0.95, ping_rtt_ms_bucket))",
           "format": "time_series",
+          "hide": false,
+          "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "{{le}}",
+          "legendFormat": "95th",
           "refId": "95th"
         },
         {
           "exemplar": true,
-          "expr": "histogram_quantile(0.90, ping_rtt_ms_bucket)",
+          "expr": "avg(histogram_quantile(0.90, ping_rtt_ms_bucket))",
           "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "90th",
           "refId": "90th"
         },
         {
           "exemplar": true,
-          "expr": "histogram_quantile(0.10, ping_rtt_ms_bucket)",
+          "expr": "avg(histogram_quantile(0.10, ping_rtt_ms_bucket))",
           "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "10th",
           "refId": "10th"
         },
         {
           "exemplar": true,
-          "expr": "histogram_quantile(0.01, ping_rtt_ms_bucket)",
+          "expr": "avg(histogram_quantile(0.01, ping_rtt_ms_bucket))",
           "hide": false,
           "interval": "",
-          "legendFormat": "",
+          "legendFormat": "1st",
           "refId": "1st"
         }
       ],
@@ -278,7 +288,7 @@
       "title": "Recent Round Trip Time Percentiles",
       "tooltip": {
         "shared": true,
-        "sort": 0,
+        "sort": 2,
         "value_type": "individual"
       },
       "type": "graph",
@@ -323,12 +333,12 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-1m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "",
   "title": "Net Test",
   "uid": "WM-nr_lMk",
-  "version": 9
+  "version": 11
 }
