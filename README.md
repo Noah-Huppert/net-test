@@ -47,7 +47,7 @@ Other options:
 - `-m string`: Host on which to serve Prometheus metrics (default ":2112")
 
 ## Run with Docker Compose
-A Docker Compose file is provided which orchestrates the execution of this tool.
+A Docker Compose file is provided which orchestrates the execution of Net Test, Prometheus, and Grafana.
 
 Run:
 
