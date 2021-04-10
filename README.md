@@ -40,7 +40,7 @@ Host picking strategy:
 
 Measurement options:
 
-- `-p int`: Interval in milliseconds at which to perform the ping measurement. A value of -1 disables this test. Results recorded to the "ping_rtt_ms" and "ping_failures_total" metrics with the "target_host" label. (default 10000)
+- `-p int`: Interval in milliseconds at which to perform the ping measurement. A value of -1 disables this test. Results recorded to the `ping_rtt_ms` and `ping_failures_total` metrics with the `target_host` label. (default 10000)
 
 Other options:
 
