@@ -19,7 +19,7 @@ Prometheus and Grafana Docker containers are provided setup and ready to analyse
 # Run
 The Net Test tool measures results and publishes them for Prometheus. Grafana is used to view the data.
 
-A Docker Compose setup is provided to make this process as easy as running a single tool, see [Run with Docker Compose](#run-with-docker-compose).
+A Docker Compose setup is provided to make this process as easy as running a single command, see [Run with Docker Compose](#run-with-docker-compose).
 
 If one would like to run the setup without Docker Compose see [Run Manually](#run-manually).
 
