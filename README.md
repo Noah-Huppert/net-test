@@ -40,7 +40,7 @@ Host picking strategy:
 
 Measurement options:
 
-- `-p int`: Interval in milliseconds at which to perform the ping measurement. Will perform 3 ping(s). A value of -1 disables this test. Results recorded to the "ping_rtt_ms" and "ping_failures_total" metrics with the "target_host" label. (default 10000)
+- `-p int`: Interval in milliseconds at which to perform the ping measurement. A value of -1 disables this test. Results recorded to the "ping_rtt_ms" and "ping_failures_total" metrics with the "target_host" label. (default 10000)
 
 Other options:
 
@@ -57,11 +57,15 @@ docker-compose up -d
 
 Then visit [127.0.0.1:3000](http://127.0.0.1:3000) to view the metrics. Select the `Net Test` dashboard.
 
-To customize the command line arguments used to run `net-test` in Docker create a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Then edit this file with your custom command. To run with the custom command:
+To customize the measurements and behavior of Net Test one must edit Docker Compose configuration. Make a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Edit the `services.net_test.command` field in this file with your custom command line options (see [Command Line Options](#command-line-options) for 
+
+Now run the Docker Compose setup with the following command:
 
 ```
 docker-compose -f docker-compose.yml -f docker-compose.custom.yml up -d
 ```
+
+This tells Docker Compose to look at the `docker-compose.yml` and `docker-compose.custom.yml` files for configuration. The `docker-compose.yml` file contains the original Docker Compose setup details. Your `docker-compose.custom.yml` file contains an override for the container which runs the Net Test tool.
 
 This is a lot to type every time, so the helper script `custom-docker-compose` is provided to make life easier. The following is equivalent to the command above:
 
