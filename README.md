@@ -57,7 +57,7 @@ docker-compose up -d
 
 Then visit [127.0.0.1:3000](http://127.0.0.1:3000) and view the `Net Test` dashboard.
 
-To customize the measurements and behavior of Net Test one must edit Docker Compose configuration. Make a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Edit the `services.net_test.command` field in this file with your custom command line options.
+To customize the measurements and behavior of Net Test one must edit the Docker Compose configuration. Make a copy of `docker-compose.custom.example.yml` named `docker-compose.custom.yml`. Edit the `services.net_test.command` field in this file with your custom command line options.
 
 For example this `docker-compose.custom.yml` file tells Net Test to measure `example.com` before any other target hosts, and run the ping test every second (see [Command Line Options](#command-line-options)):
 
