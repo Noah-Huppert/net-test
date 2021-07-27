@@ -16,9 +16,6 @@ import (
 // PING_COUNT is the number of ping packets sent to determine the average round trip time.
 const PING_COUNT int = 1
 
-// PING_TIMEOUT_MS is the number of milliseconds before a ping attempt will timeout. 30 seconds.
-const PING_TIMEOUT_MS int = 30000
-
 // log is the application logger.
 var log golog.Logger = golog.NewLogger("net-test")
 
@@ -101,6 +98,12 @@ func main() {
 		10000,
 		fmt.Sprintf("Interval in milliseconds at which to perform the ping measurement. Will perform %d ping(s). A value of -1 disables this test. Results recorded to the \"ping_rtt_ms\" and \"ping_failures_total\" metrics with the \"target_host\" label.", PING_COUNT))
 
+	var timeoutMs int
+	flag.IntVar(&timeoutMs,
+		"o",
+		30000,
+		"Change timeout of the ping")
+
 	flag.Parse()
 
 	if len(targetHosts.Get()) == 0 {
@@ -169,7 +172,7 @@ func main() {
 					}
 					pinger.Count = PING_COUNT
 					pinger.SetPrivileged(true)
-					pinger.Timeout = time.Duration(PING_TIMEOUT_MS) * time.Millisecond
+					pinger.Timeout = time.Duration(timeoutMs) * time.Millisecond
 
 					pingers = append(pingers, pinger)
 				}
